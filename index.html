@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Length Calculator</title>
+  </head>
+  <body>
+    This is electron video length calculator.
+    <br />
+    <br />
+    <br />
+    <form>
+      <label>Select a video</label>
+      <input type="file" accept="video/*" />
+      <div>
+        <button type="submit">Get Info</button>
+      </div>
+    </form>
+    <div class="duration"></div>
+  </body>
+  <script>
+    const electron = require("electron");
+    const { ipcRenderer } = electron;
+    document.querySelector("form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const { path } = e.target[0].files[0];
+      ipcRenderer.send("video:submitted", path);
+    });
+    ipcRenderer.on("video:duration", (e, data) => {
+      console.log(data);
+      document.querySelector(
+        ".duration"
+      ).innerHTML = `This video is of ${data} seconds.`;
+    });
+  </script>
+</html>
